@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    <style>
+        .container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            width: 100%;
+            min-height: 600px;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        .instructions {
+            margin: 0px 24px;
+        }
+
+        .video-comparison {
+        }
+
+        .video-pair {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .radio-buttons {
+            display: flex;
+        }
+
+        .buttons {
+            margin-bottom: 0px;
+            position: absolute;
+            width: 100%;
+            bottom: 0px;
+            left: 0px;
+            padding: 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }   
+
+        .buttons button.next:only-child {
+            margin-left: auto;
+        }
+
+        .buttons button {
+            border: none;
+            border-radius: 12px;
+            font-size: 24px;
+            padding: 8px;
+            color: white;
+            background-color: rgb(0, 115, 187);
+        }
+        .buttons button:disabled {
+            background-color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <crowd-form>
+        <!--<full-instructions header="Video Comparison Instructions">-->
+        <!--    <p>Watch the main video, and then watch each pair of videos (Left and Right).</p>-->
+        <!--    <p>Choose the video that you think is the most important (either Left or Right) for each pair.</p>-->
+        <!--</full-instructions>-->
+        <short-instructions>
+            <p>Watch the full video at the top, sped-up to 30 seconds.</p>
+            <p>For each of the video segment pairs below, choose the one that you think is the most important* (either
+                Left or Right).</p>
+            <p>*"Importance" is defined as the likelihood that a user replayed the video segment if the video was found
+                on a video streaming platform.</p>
+        </short-instructions>
+        <div id="form-main">
+            <div class="container" time-wait="0">
+                <h1>Informed consent</h1>
+                <div class="instructions">
+                    The results of this study will be used for research purposes and for the creation of research publications. All responses are treated as confidential. Your participation in this research is voluntary and we do not collect any personal information from the participants, therefore your contribution cannot be withdrawn after the completion of this study.
+                    If you understand the statements above and freely consent to participate in the task, please answer the following questions and press the 'Submit' button at the end of the survey. If you do not wish to participate, then please do not click on the 'Submit' button.
+                </div>
+            </div>
+            <div class="container" time-wait="0">
+                <h1>Instructions</h1>
+                <div class="instructions">
+                    <p>
+                        YouTube recently introduced a feature that shows the "Most replayed" moments to the users. The "Most replayed" score represent moments that are watched the most by YouTube users.
+                    </p>
+                    <p>
+                        Here you can see an example of a YouTube video and its "Most replayed" score, represented by a grey curve above the timeline. The peaks in the curve correspond to moments that the users watched more often.
+                    </p>
+
+                    <figure>
+                        <img height="300px" width="auto"
+                            src="https://duet-cdn.vox-cdn.com/thumbor/0x0:945x716/750x568/filters:focal(473x358:474x359):format(webp)/cdn.vox-cdn.com/uploads/chorus_asset/file/23522427/youtube_view_graph.jpg" />
+                        <figcaption>
+                            Source: YouTube
+                        </figcaption>
+                    </figure>
+                    <p>
+                        Your goal in this survey is to try and guess which shots in a video have higher Most Replayed score.
+                    </p>
+                    <p>
+                        In order to do this, you will be shown the full video and 20 side-by-side comparisons of shots. 
+                        You need to pick the shot that you think will be watched more often by an average YouTube user, choosing either "Left" or
+                        "Right".
+                    </p>
+                    <p>
+                        As an attention check, some videos may contain text that prompts you to select "CONTROL". Only select "CONTROL" if asked in the video.
+                    </p>
+                    <p>
+                        You must answer each of the questions.
+                    </p>
+                </div>
+            </div>
+            <div class="container" time-wait="30000">
+                <h2>Please watch this video carefully (sped-up for convenience).</h2>
+                <video id="main-video" width="640" height="360" controls>
+                    <source src="https://ytmr-user-study.s3.eu-west-2.amazonaws.com/${video_id}_speedrun.mp4"
+                        type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div id="video-comparisons"></div>
+            <div class="container" time-wait="2000">
+                <h2>Feedback</h2>
+                <h4>
+                    Did you find the instructions of the survey clear?
+                </h4>
+                <crowd-radio-group required="">
+                    <crowd-radio-button name="instructions_score_1" value="1">1 (Not clear at all)</crowd-radio-button>
+                    <crowd-radio-button name="instructions_score_2" value="2">2 (Not very clear)</crowd-radio-button>
+                    <crowd-radio-button name="instructions_score_3" value="3">3 (Neutral)</crowd-radio-button>
+                    <crowd-radio-button name="instructions_score_4" value="4">4 (Somewhat clear)</crowd-radio-button>
+                    <crowd-radio-button name="instructions_score_5" value="5">5 (Very clear)</crowd-radio-button>
+                </crowd-radio-group>
+                <h4>    
+                    How difficult was it for you to identify the "Most replayed" score?
+                </h4>
+                <crowd-radio-group required="">
+                    <crowd-radio-button name="identify_score_1" value="1">1 (Not difficult at all)</crowd-radio-button>
+                    <crowd-radio-button name="identify_score_2" value="2">2 (Not very difficult)</crowd-radio-button>
+                    <crowd-radio-button name="identify_score_3" value="3">3 (Neutral)</crowd-radio-button>
+                    <crowd-radio-button name="identify_score_4" value="4">4 (Somewhat Difficult)</crowd-radio-button>
+                    <crowd-radio-button name="identify_score_5" value="5">5 (Very difficult)</crowd-radio-button>
+                </crowd-radio-group>
+                <h4>Any issues?</h4>
+                <crowd-text-area name="feedback" rows="8" placeholder="Insert text here..." style="background-color: white;" label="Feel free to use this form to report any problems or feeback on the survey.
+                "></crowd-text-area>
+            </div>
+        </div>
+    </crowd-form>
+    
+    <script>
+        const NUM_SEGMENTS = 10;
+        $(document).ready(function () {
+            // Generate a random permutation of indices from 0 to 18
+            function shuffle(array) {
+                var currentIndex = array.length,
+                    temporaryValue, randomIndex;
+
+                    while (0 !== currentIndex) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
+                }
+                
+                return array;
+            }
+            
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            var indices = [...Array(NUM_SEGMENTS).keys()]
+            var permutedIndices = shuffle(indices);
+            console.log(permutedIndices)
+
+            // Function to get permutated index
+            function perm(i) {
+                if (i == 'CONTROL')
+                    return i
+                return permutedIndices[i];
+            }
+
+            // Example usage
+            //console.log(perm(0)); // This will return the permutated index for 0
+
+            var mindex_array = [
+                [0, 1],
+                [3, 4],
+                [2, 4],
+                [2, 3],
+                [1, 4],
+                [1, 3],
+                [1, 2],
+                [5, 6],
+                [8, 9],
+                [7, 9],
+                [7, 8],
+                [6, 9],
+                [6, 8],
+                [6, 7],
+                [4, 9],
+                [4, 8],
+                [4, 7],
+                [4, 6],
+                [4, 5],
+                [getRandomInt(0, NUM_SEGMENTS - 1), 'CONTROL']
+            ];
+
+            // Shuffle rows of mindex_array
+            mindex_array = shuffle(mindex_array);
+
+            // Shuffle columns of mindex_array using jQuery each
+            $.each(mindex_array, function (index, row) {
+                mindex_array[index] = shuffle(row);
+            });
+
+
+            const VIDEO_ID = '${video_id}';
+            // mindex_array.append() control pair
+            console.log("mindex_array");
+            console.log(mindex_array);
+
+            const videoContainer = $('#video-comparisons');
+
+            $.each(mindex_array, function (index, pair) {
+                console.log("Element 0: " + pair[0] + ", Element 1: " + pair[1]);
+                let perm_pair = [perm(pair[0]), perm(pair[1])];
+                console.log("Element perm 0: " + perm_pair[0] + ", Element perm 1: " + perm_pair[1]);
+
+                const comparisonDiv = $('<div class="container video-comparison" time-wait="10000"></div>');
+
+                const comparisonTitle = $('<h4>Comparison ' + (index + 1) + '/20'+
+                    ': Guess which of the two video shots has greater "Most replayed" score.</h4>');
+                const tip = $(`<p>Instructions: <b>Click</b> on the videos to watch them, then pick one of the options below.</p>`);
+                const answerTitle = $(`<h4>Answer:</h4>`);
+
+                const videoPair = $('<div class="video-pair"></div>');
+
+                function pairToUrl(p) {
+                    let suffix;
+                    if (p == 'CONTROL') {
+                        suffix = '_control';
+                    } else {
+                        suffix = '_clip_' + ('00' + p).slice(-2);
+                    }
+                    return `https://ytmr-user-study.s3.eu-west-2.amazonaws.com/` + VIDEO_ID + suffix +
+                        '.mp4';
+                }
+                const leftVideo = $(`<video width="640" height="360" controls>
+                              <source src="` + pairToUrl(perm_pair[0]) + `" type="video/mp4">
+                              Your browser does not support the video tag.
+                            </video>`);
+
+                const rightVideo = $(`<video width="640" height="360" controls>
+                              <source src="` + pairToUrl(perm_pair[1]) + `" type="video/mp4">
+                              Your browser does not support the video tag.
+                            </video>`);
+
+                videoPair.append(leftVideo);
+                videoPair.append(rightVideo);
+
+                const radioButtons = $('<div class="radio-buttons"></div>');
+
+                const inputLeft = $('<input>').attr({
+                    type: 'hidden',
+                    name: 'pair' + index + '_0',
+                    value: perm_pair[0]
+                });
+
+                const inputRight = $('<input>').attr({
+                    type: 'hidden',
+                    name: 'pair' + index + '_1',
+                    value: perm_pair[1]
+                });
+
+                radioButtons.append(inputLeft);
+                radioButtons.append(inputRight);
+
+
+                const radioGroup = $(`<crowd-radio-group required=""></crowd-radio-group>`);
+                const leftRadio = $(
+                    `<crowd-radio-button name="` + index +
+                    `_left" value="Left">Left</crowd-radio-button>`
+                );
+                const rightRadio = $(
+                    `<crowd-radio-button name="` + index +
+                    `_right" value="Right">Right</crowd-radio-button>`
+                );
+                const controlRadio = $(
+                    `<crowd-radio-button name="` + index +
+                    `_control" value="CONTROL">CONTROL</crowd-radio-button>`
+                );
+
+                radioGroup.append(leftRadio);
+                radioGroup.append(rightRadio);
+                radioGroup.append(controlRadio);
+
+
+                radioButtons.append(radioGroup);
+
+                comparisonDiv.append(comparisonTitle);
+                comparisonDiv.append(videoPair);
+                comparisonDiv.append(tip);
+                comparisonDiv.append(answerTitle);
+                comparisonDiv.append(radioButtons);
+
+                videoContainer.append(comparisonDiv);
+            });
+        });
+    </script>
+    <script>
+        function validateForm() {
+            var valid = true;
+            var radioGroups = document.querySelectorAll("crowd-radio-group");
+            for (var i = 0; i < radioGroups.length; i++) {
+                var validGroup = false;
+                var radioButtons = radioGroups[i].children;
+                for (var j = 0; j < radioButtons.length; j++) {
+                    validGroup = validGroup || radioButtons[j].checked;
+                }
+                valid = valid && validGroup;
+            }
+            return valid;
+        }
+
+        window.onload = function () {
+            document.querySelector('crowd-form').onsubmit = function (e) {
+                if (!validateForm()) {
+                    alert("Please answer all the questions in order to submit.");
+                    e.preventDefault();
+                }
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            
+            const containers = $(".container");
+            function startCountdown(c) {
+                const container = $(c);
+                if(container.attr("runningTimer") == "true") {
+                    return;
+                }
+                container.attr("runningTimer", "true");
+                const buttonNext = container.find("button.next");
+                if(!buttonNext){
+                    return;
+                }
+                // var time = 10;
+                var clockInterval = setInterval(() => {
+                    // if(time <= 0) {
+                    //     buttonNext.text("Next")
+                    // }else {
+                    //     buttonNext.text("Next: " + time);
+                    // }
+                    // time -= 1;
+                    if(buttonNext.prop('enabled-tmp')){
+                        const radioGroup = container.find("crowd-radio-group:first");
+                        if(radioGroup.children().length > 0) {
+                            var validGroup = false;
+                            const radioButtons = radioGroup.children();
+                            for (var j = 0; j < radioButtons.length; j++) {
+                                validGroup = validGroup || radioButtons[j].checked;
+                            }
+                            if(validGroup){
+                                buttonNext.prop('disabled', false);
+                            }
+                        }else{
+                            buttonNext.prop('disabled', false);
+                        }
+                    }
+                }, 1000); // God forgive me for my sins
+                setTimeout(() => {
+                    buttonNext.prop('enabled-tmp', true);
+                }, container.attr("time-wait"));
+                // setTimeout(() => {
+                //     clearInterval(clockInterval);
+                // }, 12000);
+            }
+            function refreshVisibility() {
+                $.each(containers, function (index, container) {
+                    if(index == window.currentContainer) {
+                        $(container).show();
+                        startCountdown(container)
+                    } else {
+                        $(container).hide();
+                    }
+                })
+            }
+            $.each(containers, function(index, container){
+                buttonsDiv = $(`<div class="buttons"></div>)`)
+                $(container).append(buttonsDiv);
+            })
+            $.each(containers.slice(1),  function(index, container) {
+                prevButton = $(`<button type="button" class="prev">Previous</button>`);
+                prevButton.on('click', () => {
+                    window.currentContainer = (index+1)-1;
+                    refreshVisibility();
+                });
+                $(container).find('.buttons:first').append(prevButton);
+            });
+            $.each(containers.slice(0,-1),  function(index, container) {
+                nextButton = $(`<button type="button" class="next">Next</button>`);
+                // if(index != 0){
+                nextButton.prop('disabled', true);
+                nextButton.attr("title", 'Complete the task and choose an answer to proceed.');
+                // }
+                nextButton.on('click', () => {
+                    window.currentContainer = index+1;
+                    refreshVisibility();
+                });
+                $(container).find('.buttons:first').append(nextButton);
+            });
+            window.currentContainer = 0;
+            refreshVisibility()
+        })
+    </script>
+</body>
+</html>
