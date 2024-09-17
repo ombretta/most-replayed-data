@@ -1,5 +1,5 @@
 # Can we predict the Most Replayed data of video streaming platforms?
-Official repository of the paper "Can we predict the Most Replayed data of video streaming platforms?"
+Official repository of the paper "Can we predict the Most Replayed data of video streaming platforms?" [[ArXiv](https://arxiv.org/pdf/2309.06102)] [[DOI](https://doi.org/10.48550/ARXIV.2309.06102)]
 
 ### Dataset
 #### Download links
@@ -17,7 +17,9 @@ For instance:
 /-Gm_IKNRqgQ
     ...
 ```
+
 "features" contains the extracted I3D features of the video
+
 "heat-markers" contains the Most Replayed data from YouTube
 
 To watch the videos you can browse to `youtube.com/watch?v=VIDEO_ID`
