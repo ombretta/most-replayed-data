@@ -126,10 +126,10 @@ class Solver(object):
 
 
                     if self.config.num_random is None:
-                        triu_idxs = torch.triu_indices(T,T, device=self.config.device)
-                        x1 = x1[triu_idxs]
-                        x2 = x2[triu_idxs]
-                        y = y[triu_idxs]
+                        triu_idxs = torch.triu_indices(T,T, offset=1, device=self.config.device)
+                        x1 = x1[triu_idxs[0], triu_idxs[1]]
+                        x2 = x2[triu_idxs[0], triu_idxs[1]]
+                        y = y[triu_idxs[0], triu_idxs[1]]
                     else:
                         num_random = self.config.num_random
                         random_idxs = torch.randint(0, T, (2, num_random),device=self.config.device)
